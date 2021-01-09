@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
     //introduce motion object
     Motion motion;
 
-    cv::namedWindow("MyCameraPreview", cv::WINDOW_AUTOSIZE);
+    //cv::namedWindow("MyCameraPreview", cv::WINDOW_AUTOSIZE);
     cv::cuda::Stream m_stream;
 
     // main loop
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
         cv::Mat cpu_frame;
 
         cv::cuda::GpuMat gpu_out;
-        cv::Mat cpu_out;
+        cv::Mat cpu_out, cpu_grey;
         cv::cuda::GpuMat gpu_desc;
 
         cv::cuda::GpuMat gpu_gray;
@@ -144,6 +144,7 @@ int main(int argc, char *argv[]) {
 	    std::vector<cv::KeyPoint> points;
         gpu_detector->detectAndComputeAsync(gpu_gray, tmp, out, gpu_out, false, m_stream);
 
+        gpu_gray.download(cpu_grey, m_stream);
 
         // - download descriptors to CPU RAM
 
@@ -157,7 +158,8 @@ int main(int argc, char *argv[]) {
             gpu_out.download(cpu_out);
         	std::cout << "received data=======================" << std::endl;
         	motion.add_frame(points, cpu_out);
-        	cv::imshow("MyCameraPreview",cpu_out);
+        	//cv::imshow("MyCameraPreview",cpu_out);
+        	motion.show(cpu_grey);
         }
         //gpu_out.copyTo(cpu_out);
         std::cout << "After detect" << std::endl;

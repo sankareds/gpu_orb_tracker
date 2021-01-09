@@ -26,7 +26,8 @@ void HomographyLayer::initialize(const std::vector<cv::KeyPoint> &points, const 
         if (last_frame_matched.empty()) {
             homography = cv::Mat::eye(3, 3, CV_64F);
         } else {
-            homography = cv::findHomography(last_frame_matched, new_frame_matched, cv::RANSAC, 0.1);
+        	if(last_frame_matched.size() > 3)
+        		homography = cv::findHomography(last_frame_matched, new_frame_matched, cv::RANSAC, 0.1);
         }
         if (homography.empty()) {
             homography = cv::Mat::eye(3, 3, CV_64F);
