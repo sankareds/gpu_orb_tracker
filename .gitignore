@@ -63,3 +63,4 @@
 *.app
 /build/
 gpu_orb_tracker
+.ptp-sync/
